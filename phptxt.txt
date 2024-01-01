@@ -1,0 +1,31 @@
+<?php
+include('includes_sidebar/footer.php');
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "hospitalmanagement";
+$port = "3306";
+
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $doctorId = $_POST["doctor_id"];
+    // Assuming patientName and appointmentDate are provided by the user or obtained from session
+    $patientName = "John Doe";
+    $appointmentDate = "2023-01-01";
+
+    $sql = "INSERT INTO appointments (doctor_id, patient_name, appointment_date) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iss", $doctorId, $patientName, $appointmentDate);
+    $stmt->execute();
+    $stmt->close();
+
+    header("Location: appointment_status.php");
+    exit();
+}
+?>
